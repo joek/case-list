@@ -5,7 +5,7 @@ applications:
   instances: 1
   memory: 128M
   routes:
-    - route: ###SERVICE_URL###
+    - route: ###SERVICE_ROUTE###
   buildpacks:
     - nodejs_buildpack  
   timeout: 180
@@ -16,7 +16,7 @@ applications:
 - name: approuter
   path: ./approuter
   routes:
-    - route: ###ROUTER_URL###
+    - route: ###ROUTER_ROUT###
   buildpacks:
     - nodejs_buildpack
   memory: 128M
@@ -26,7 +26,7 @@ applications:
     destinations: >
       [
         {"name":"cases-destination",
-         "url":"https://mashup-demo-service.cfapps.eu10.hana.ondemand.com",
+         "url":"###SERVICE_URL###",
          "forwardAuthToken": true}
       ]
     SEND_XFRAMEOPTIONS: false
