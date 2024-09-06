@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="utf-8">
+	<title>Cases App</title>
+	<script src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js"
+		id="sap-ui-bootstrap"
+		data-sap-ui-theme="sap_horizon"
+		data-sap-ui-libs="sap.m"
+		data-sap-ui-frame-options="allow">
+	</script>
+	<script type="text/javascript">
+		sap.ui.getCore().attachInit(function () {
+
+			// create a mobile app and display page1 initially
+			var app = new sap.m.App("casesApp", {
+				initialPage: "cases"
+			});
+
+			// create model for the list view
+			var oListModel = new sap.ui.model.json.JSONModel();
+			sap.ui.getCore().setModel(oListModel);
+			// TODO read window.location.href
+			var casesUrl = "/cases/cases";
+			var searchParams = new URLSearchParams(window.location.search);
+			var accountId = searchParams.get("accountId");
+			 //  contains path mapping which is specified in xs-app.json
+			if (document.defaultView.location.origin.includes("localhost")) {
+				casesUrl = "/cases";
+			}
+			oListModel.loadData(`${casesUrl}?accountId=${accountId}`);
+			console.log(casesUrl);
+			console.log(oListModel);
+
+			// create a model for the details view
+			var oDetailsModel = new sap.ui.model.json.JSONModel();
+			sap.ui.getCore().setModel(oDetailsModel, "details");
+
+			// create list item template
+			var caseItemTemplate = new sap.m.StandardListItem({
+				title : "{subject}",
+				description : "{displayId}",
+				type : sap.m.ListType.Navigation,
+				press: function (oEvent) {
+					oSelectedItem = oEvent.oSource.getBindingContext().getObject();
+					oDetailsModel.setData(oSelectedItem);
+	        		app.to("details");
+	        	}
+			});
+
+			// create list
+	        var casesList = new sap.m.List();
+			
+			// Insert the code to increase the memory of the application
+
+			// bind list with template
+	        casesList.bindAggregation("items", {path: "/", template: caseItemTemplate});
+
+			// create the list page
+			var cases = new sap.m.Page("cases", {
+				title : "Cases",
+				showNavButton : false,
+				content : casesList
+			});
+
+			// create the details page with a back button
+			var details = new sap.m.Page("details", {
+				title : "Case Details",
+				showNavButton : true,
+				navButtonPress : function () {
+					// go back to the previous page
+					app.back();
+				},
+				// display the details of the product
+				content : new sap.m.ObjectHeader({
+					title : "{details>/subject}",
+					attributes: new sap.m.ObjectAttribute(
+						{
+							title : "Case ID",
+							text : "{details>/displayId}"
+						},
+						{
+							title : "ID",
+							text : "{details>/id}"
+						},
+						{
+							title : "Escalation",
+							text : "{details>/escalationStatus}"
+						}
+					)
+				}),
+				footer: new sap.m.OverflowToolbar({
+					content: [
+						new sap.m.ToolbarSpacer(),
+						new sap.m.Button({
+							text: "Escalate",
+							
+							press: function (evt) {
+								const id = sap.ui.getCore().getModel("details").getProperty("/id")
+								console.log(id)
+								const token = oListModel.getProperty("/CSRFToken")
+								console.log(token)
+								jQuery.ajax({
+									type : "POST",
+									contentType : "application/json",
+									url : `${casesUrl}/${id}`,
+									dataType : "json",
+									headers: {
+										'X-CSRF-Token': token
+									},
+									success : function(data,textStatus, jqXHR) {
+										console.log("Success...")
+										app.to("cases");
+									}
+								})
+							}
+						})
+					]  
+				})
+			});
+			
+			// add list and details to the app
+			app.addPage(cases).addPage(details);
+			
+			// place the app into the HTML document
+			app.placeAt("content");
+		});
+	</script>
+</head>
+<body class="sapUiBody" id="content">
+</body>
+</html>

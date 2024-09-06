@@ -1,0 +1,51 @@
+{
+	"xsappname": "case-list",
+	"tenant-mode": "dedicated",
+	"scopes": [
+		{
+			"name": "$XSAPPNAME.read",
+			"description": "With this scope, USER can read cases."
+		},
+		{
+			"name": "$XSAPPNAME.write",
+			"description": "With this scope, USER can write cases."
+		}
+	],
+
+	"role-templates": [
+		{
+			"name": "Viewer",
+			"description": "Role to get the list of cases",
+			"scope-references": [
+				"$XSAPPNAME.read"
+			]
+		}, 
+		{
+			"name": "Writer",
+			"description": "Role to get change cases",
+			"scope-references": [
+				"$XSAPPNAME.write"
+			]
+		}
+	],
+	"role-collections": [
+		{
+			"name": "CaseListViewer",
+			"description": "Case List Viewer",
+			"role-template-references": [
+				"$XSAPPNAME.Viewer"
+			]
+		},
+		{
+			"name": "CaseWriter",
+			"description": "Case Writer",
+			"role-template-references": [
+				"$XSAPPNAME.Writer"
+			]
+		}
+	],
+  "oauth2-configuration": 
+    {  
+      "redirect-uris": ["https://###ROUTER_URL###/login/callback"]          
+      }
+}

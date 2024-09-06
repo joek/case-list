@@ -1,0 +1,33 @@
+applications:
+# Product List Application
+- name: cases
+  path: ./cases
+  instances: 1
+  memory: 128M
+  routes:
+    - route: ###SERVICE_URL###
+  buildpacks:
+    - nodejs_buildpack  
+  timeout: 180
+  services:
+    - xsuaa-service
+    - destination-service
+# Application Router
+- name: approuter
+  path: ./approuter
+  routes:
+    - route: ###ROUTER_URL###
+  buildpacks:
+    - nodejs_buildpack
+  memory: 128M
+  services:
+  - xsuaa-service
+  env:
+    destinations: >
+      [
+        {"name":"cases-destination",
+         "url":"https://mashup-demo-service.cfapps.eu10.hana.ondemand.com",
+         "forwardAuthToken": true}
+      ]
+    SEND_XFRAMEOPTIONS: false
+    COOKIES: "{ \"SameSite\":\"None\" }"

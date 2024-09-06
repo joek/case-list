@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@sap-cloud-sdk/connectivity": "^3.13.0"
+  }
+}

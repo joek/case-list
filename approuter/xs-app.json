@@ -1,0 +1,21 @@
+{
+  "routes": [
+    {
+      "source": "^/cases",
+      "target": "/",
+      "destination": "cases-destination",
+      "csrfProtection": false
+    }
+  ],
+  "cors": [
+    {
+      "uriPattern": "^/cases1$",
+      "allowedOrigin": [
+        {
+          "host": "###TENANT_DOMAIN###",
+          "protocol": "https"
+        }
+      ]
+    }
+  ]
+}

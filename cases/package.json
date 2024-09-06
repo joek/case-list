@@ -1,0 +1,21 @@
+{
+  "name": "cloud-cf-case-list",
+  "version": "1.0.0",
+  "description": "Case list sample app",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "John Doe",
+  "license": "ISC",
+  "dependencies": {
+    "@sap-cloud-sdk/http-client": "^3.13.0",
+    "@sap/xsenv": "^5.1.0",
+    "@sap/xssec": "^3.6.1",
+    "express": "^4.17.1",
+    "passport": "^0.7.0"
+  },
+  "devDependencies": {
+    "request": "^2.88.0"
+  }
+}
