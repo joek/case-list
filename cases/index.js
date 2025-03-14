@@ -38,6 +38,8 @@ app.post('/cases/:id', checkWriteScope, updateCase)
 	}
 }
 
+app.use('/', express.static('static/'));
+
 app.listen(port, () => {
 	console.log('%s listening at %s', app.name, port);
 })
